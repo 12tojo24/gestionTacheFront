@@ -1,21 +1,26 @@
-// components/modals/TaskModal.jsx  — due_date → due géré proprement
+// components/modals/TaskModal.jsx
 import { useState } from "react";
-import { PRIORITIES, CATEGORIES, STATUSES } from "../../constants";
+import { PRIORITIES, CATEGORIES, STATUSES, STATUS_LABELS } from "../../constants";
 
 export default function TaskModal({ task, onClose, onSave }) {
   const [form, setForm] = useState(
     task
       ? { ...task }
-      : { title: "", desc: "", cat: "Dev", pri: "Normale", status: "À faire", due: "" }
+      : { title: "", desc: "", cat: "Dev", pri: "Normale", status: "A faire", due: "" }
   );
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
   return (
-    <div className="modal-wrap" onClick={(e) => e.target === e.currentTarget && onClose()}>
+    <div
+      className="modal-wrap"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
       <div className="modal">
         <div className="modal-head">
-          <span className="modal-title">{task ? "Modifier la tâche" : "Nouvelle tâche"}</span>
+          <span className="modal-title">
+            {task ? "Modifier la tâche" : "Nouvelle tâche"}
+          </span>
           <button className="btn btn-icon" onClick={onClose}>✕</button>
         </div>
 
@@ -43,13 +48,21 @@ export default function TaskModal({ task, onClose, onSave }) {
         <div className="form-row">
           <div className="form-group">
             <label className="form-label">Catégorie</label>
-            <select className="form-select" value={form.cat} onChange={(e) => set("cat", e.target.value)}>
+            <select
+              className="form-select"
+              value={form.cat}
+              onChange={(e) => set("cat", e.target.value)}
+            >
               {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
             </select>
           </div>
           <div className="form-group">
             <label className="form-label">Priorité</label>
-            <select className="form-select" value={form.pri} onChange={(e) => set("pri", e.target.value)}>
+            <select
+              className="form-select"
+              value={form.pri}
+              onChange={(e) => set("pri", e.target.value)}
+            >
               {PRIORITIES.map((p) => <option key={p}>{p}</option>)}
             </select>
           </div>
@@ -58,8 +71,16 @@ export default function TaskModal({ task, onClose, onSave }) {
         <div className="form-row">
           <div className="form-group">
             <label className="form-label">Statut</label>
-            <select className="form-select" value={form.status} onChange={(e) => set("status", e.target.value)}>
-              {STATUSES.map((s) => <option key={s}>{s}</option>)}
+            <select
+              className="form-select"
+              value={form.status}
+              onChange={(e) => set("status", e.target.value)}
+            >
+              {STATUSES.map((s) => (
+                <option key={s} value={s}>
+                  {STATUS_LABELS[s]}
+                </option>
+              ))}
             </select>
           </div>
           <div className="form-group">

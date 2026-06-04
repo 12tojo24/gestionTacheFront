@@ -1,4 +1,4 @@
-// components/StatsGrid.jsx  — accepte les stats du back
+// components/StatsGrid.jsx
 export default function StatsGrid({ stats, loading }) {
   const items = [
     { label: "Total",     value: stats?.total       ?? "—", color: "#0ea5e9" },

@@ -1,12 +1,12 @@
-// components/TaskList.jsx  — ajout état loading
+// components/TaskList.jsx
 import TaskCard from "./TaskCard";
 
-export default function TaskList({ tasks, loading, onEdit, onDelete, onToggle }) {
+export default function TaskList({ tasks, loading, onEdit, onDelete, onToggle, onStatusChange }) {
   if (loading) {
     return (
       <div className="task-list">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="task-card skeleton" style={{ height: 88, opacity: 0.4 }} />
+          <div key={i} className="task-card" style={{ height: 90, opacity: 0.3 }} />
         ))}
       </div>
     );
@@ -30,6 +30,7 @@ export default function TaskList({ tasks, loading, onEdit, onDelete, onToggle })
           onEdit={onEdit}
           onDelete={onDelete}
           onToggle={onToggle}
+          onStatusChange={onStatusChange}
         />
       ))}
     </div>

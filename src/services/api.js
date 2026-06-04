@@ -13,15 +13,17 @@ async function request(method, path, body) {
 }
 
 export const taskService = {
-  getAll:       (params = {}) => {
+  getAll: (params = {}) => {
     const qs = new URLSearchParams(
-      Object.fromEntries(Object.entries(params).filter(([, v]) => v && v !== "Tous"))
+      Object.fromEntries(
+        Object.entries(params).filter(([, v]) => v && v !== "Tous")
+      )
     ).toString();
     return request("GET", `/tasks${qs ? "?" + qs : ""}`);
   },
-  getStats:     ()       => request("GET",    "/tasks/stats"),
-  create:       (body)   => request("POST",   "/tasks",              body),
-  update:       (id, body) => request("PUT",  `/tasks/${id}`,        body),
-  updateStatus: (id, status) => request("PATCH", `/tasks/${id}/status`, { status }),
-  delete:       (id)     => request("DELETE", `/tasks/${id}`),
+  getStats:     ()            => request("GET",    "/tasks/stats"),
+  create:       (body)        => request("POST",   "/tasks",             body),
+  update:       (id, body)    => request("PUT",    `/tasks/${id}`,       body),
+  updateStatus: (id, status)  => request("PATCH",  `/tasks/${id}/status`,{ status }),
+  delete:       (id)          => request("DELETE", `/tasks/${id}`),
 };

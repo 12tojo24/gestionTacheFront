@@ -1,10 +1,9 @@
 // components/Toolbar.jsx
-import { PRIORITIES, STATUSES } from "../constants";
+import { PRIORITIES, STATUSES, STATUS_LABELS } from "../constants";
 
 export default function Toolbar({ search, onSearch, filterPri, onFilterPri, tab, onTab, tasks }) {
   return (
     <>
-      {/* Barre de recherche */}
       <div className="toolbar">
         <div className="search">
           <span style={{ color: "var(--hint)", fontSize: 15 }}>⌕</span>
@@ -16,7 +15,6 @@ export default function Toolbar({ search, onSearch, filterPri, onFilterPri, tab,
         </div>
       </div>
 
-      {/* Filtres priorité */}
       <div className="filters">
         {["Tous", ...PRIORITIES].map((p) => (
           <button
@@ -29,17 +27,19 @@ export default function Toolbar({ search, onSearch, filterPri, onFilterPri, tab,
         ))}
       </div>
 
-      {/* Onglets statut */}
       <div className="tabs">
         {["Tous", ...STATUSES].map((s) => {
-          const cnt = s === "Tous" ? tasks.length : tasks.filter((t) => t.status === s).length;
+          const cnt =
+            s === "Tous"
+              ? tasks.length
+              : tasks.filter((t) => t.status === s).length;
           return (
             <button
               key={s}
               className={`tab${tab === s ? " on" : ""}`}
               onClick={() => onTab(s)}
             >
-              {s}
+              {s === "Tous" ? "Tous" : STATUS_LABELS[s]}
               <span className="tab-count">{cnt}</span>
             </button>
           );

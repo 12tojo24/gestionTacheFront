@@ -1,14 +1,24 @@
 // components/TaskManager.jsx
 import { useState, useEffect, useRef, useCallback } from "react";
-import Topbar from "./TopBar";
-import StatsGrid   from "./StatsGrid";
-import Toolbar     from "./Toolbar";
-import TaskList    from "./TaskList";
-import TaskModal   from "./modals/TaskModal";
-import DeleteModal from "./modals/DeleteModal";
-import Toast       from "./Toast";
+import Topbar        from "./Topbar";
+import StatsGrid     from "./StatsGrid";
+import Toolbar       from "./Toolbar";
+import TaskList      from "./TaskList";
+import TaskModal     from "./modals/TaskModal";
+import DeleteModal   from "./modals/DeleteModal";
+import Toast         from "./Toast";
 import { taskService } from "../services/api";
 import "../styles/global.css";
+
+const mapTask = (t) => ({
+  id:     t.id,
+  title:  t.title,
+  desc:   t.description || "",
+  cat:    t.category,
+  pri:    t.priority,
+  status: t.status,
+  due:    t.due_date ? t.due_date.slice(0, 10) : "",
+});
 
 export default function TaskManager() {
   const [tasks,        setTasks]        = useState([]);
@@ -22,14 +32,12 @@ export default function TaskManager() {
   const [toast,        setToast]        = useState(null);
   const toastTimer = useRef(null);
 
-  // ── Toast ────────────────────────────────────────────────────────────────────
   const showToast = (msg, color = "#22c55e") => {
     setToast({ msg, color });
     clearTimeout(toastTimer.current);
     toastTimer.current = setTimeout(() => setToast(null), 2800);
   };
 
-  // ── Chargement des tâches ────────────────────────────────────────────────────
   const fetchTasks = useCallback(async () => {
     setLoading(true);
     try {
@@ -43,7 +51,7 @@ export default function TaskManager() {
         taskService.getStats(),
       ]);
 
-      setTasks(tasksRes.data);
+      setTasks(tasksRes.data.map(mapTask));
       setStats(statsRes.data);
     } catch (err) {
       showToast(err.message, "#ef4444");
@@ -53,13 +61,11 @@ export default function TaskManager() {
   }, [tab, filterPri, search]);
 
   useEffect(() => {
-    const timer = setTimeout(fetchTasks, search ? 300 : 0); // debounce search
+    const timer = setTimeout(fetchTasks, search ? 300 : 0);
     return () => clearTimeout(timer);
   }, [fetchTasks]);
 
-  // ── Créer / Modifier ─────────────────────────────────────────────────────────
   const handleSave = async (form) => {
-    // Mapping champs front → back
     const body = {
       title:       form.title,
       description: form.desc,
@@ -68,7 +74,6 @@ export default function TaskManager() {
       status:      form.status,
       due_date:    form.due || null,
     };
-
     try {
       if (form.id) {
         await taskService.update(form.id, body);
@@ -84,7 +89,6 @@ export default function TaskManager() {
     }
   };
 
-  // ── Supprimer ────────────────────────────────────────────────────────────────
   const handleDeleteConfirm = async () => {
     try {
       await taskService.delete(deleteTarget.id);
@@ -96,28 +100,41 @@ export default function TaskManager() {
     }
   };
 
-  // ── Toggle statut ────────────────────────────────────────────────────────────
   const handleToggle = async (id) => {
-    const task   = tasks.find((t) => t.id === id);
-    const newStatus = task.status === "Terminé" ? "À faire" : "Terminé";
+    const task      = tasks.find((t) => t.id === id);
+    const newStatus = task.status === "Termine" ? "A faire" : "Termine";
+
+    setTasks((prev) =>
+      prev.map((t) => t.id === id ? { ...t, status: newStatus } : t)
+    );
     try {
       await taskService.updateStatus(id, newStatus);
-      fetchTasks();
+      const statsRes = await taskService.getStats();
+      setStats(statsRes.data);
     } catch (err) {
+      setTasks((prev) =>
+        prev.map((t) => t.id === id ? { ...t, status: task.status } : t)
+      );
       showToast(err.message, "#ef4444");
     }
   };
 
-  // ── Mapper back → front (snake_case → camelCase) ─────────────────────────────
-  const mapped = tasks.map((t) => ({
-    id:     t.id,
-    title:  t.title,
-    desc:   t.description,
-    cat:    t.category,
-    pri:    t.priority,
-    status: t.status,
-    due:    t.due_date ? t.due_date.slice(0, 10) : "",
-  }));
+  const handleStatusChange = async (id, newStatus) => {
+    const task = tasks.find((t) => t.id === id);
+    setTasks((prev) =>
+      prev.map((t) => t.id === id ? { ...t, status: newStatus } : t)
+    );
+    try {
+      await taskService.updateStatus(id, newStatus);
+      const statsRes = await taskService.getStats();
+      setStats(statsRes.data);
+    } catch (err) {
+      setTasks((prev) =>
+        prev.map((t) => t.id === id ? { ...t, status: task.status } : t)
+      );
+      showToast(err.message, "#ef4444");
+    }
+  };
 
   return (
     <div className="layout">
@@ -130,15 +147,16 @@ export default function TaskManager() {
           search={search}       onSearch={setSearch}
           filterPri={filterPri} onFilterPri={setFilterPri}
           tab={tab}             onTab={setTab}
-          tasks={mapped}
+          tasks={tasks}
         />
 
         <TaskList
-          tasks={mapped}
+          tasks={tasks}
           loading={loading}
-          onEdit={(t) => setModal(t)}
+          onEdit={(t)   => setModal(t)}
           onDelete={(t) => setDeleteTarget(t)}
           onToggle={handleToggle}
+          onStatusChange={handleStatusChange}
         />
       </div>
 
