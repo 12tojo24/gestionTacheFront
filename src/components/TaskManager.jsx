@@ -1,6 +1,6 @@
 // components/TaskManager.jsx
 import { useState, useEffect, useRef, useCallback } from "react";
-import Topbar        from "./Topbar";
+import TopBar from "./TopBar"
 import StatsGrid     from "./StatsGrid";
 import Toolbar       from "./Toolbar";
 import TaskList      from "./TaskList";
