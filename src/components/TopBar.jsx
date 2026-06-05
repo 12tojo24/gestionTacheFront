@@ -1,3 +1,4 @@
+// components/Topbar.jsx
 import { useAuth } from "../context/AuthContext";
 
 export default function Topbar({ onAdd }) {
@@ -9,8 +10,7 @@ export default function Topbar({ onAdd }) {
         <span className="logo-dot" />
         TaskFlow
       </span>
-
-      <button className="btn btn-primary" onClick={onAdd}>
+      <button className="btn btn-primary btn-add" onClick={onAdd}>
         + Ajouter
       </button>
 
@@ -20,7 +20,7 @@ export default function Topbar({ onAdd }) {
         </div>
         <span className="user-name">{user?.name}</span>
         <button className="btn btn-ghost btn-sm" onClick={logout}>
-          Déconnexion
+          Déco
         </button>
       </div>
     </div>

@@ -36,14 +36,15 @@ body {
 .topbar {
   background: var(--card);
   border-bottom: 0.5px solid var(--border2);
-  padding: 12px 16px;
+  padding: 10px 12px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   position: sticky;
   top: 0;
   z-index: 50;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow: hidden;
 }
 
 @media (min-width: 600px) {
@@ -51,11 +52,12 @@ body {
 }
 
 .logo {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
+  flex-shrink: 0;
   margin-right: auto;
 }
 
@@ -64,38 +66,39 @@ body {
 }
 
 .logo-dot {
-  width: 9px;
-  height: 9px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--accent);
   flex-shrink: 0;
   animation: pulse 2s infinite;
 }
 
-@keyframes pulse {
-  0%,100% { box-shadow: 0 0 0 0 rgba(14,165,233,.4); }
-  50%      { box-shadow: 0 0 0 8px rgba(14,165,233,0); }
-}
-
 /* ─── USER INFO ───────────────────────────────────────────── */
 .user-info {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  flex-shrink: 0;
+  min-width: 0;
 }
 
 .user-avatar {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: var(--accent-bg);
   color: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   flex-shrink: 0;
+}
+
+@media (min-width: 600px) {
+  .user-avatar { width: 32px; height: 32px; font-size: 13px; }
 }
 
 .user-name {
@@ -105,8 +108,47 @@ body {
   display: none;
 }
 
-@media (min-width: 480px) {
-  .user-name { display: block; }
+@media (min-width: 420px) {
+  .user-name {
+    display: block;
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 600px) {
+  .user-name { max-width: none; }
+}
+
+/* ─── BOUTON AJOUTER ──────────────────────────────────────── */
+.btn-primary.btn-add {
+  padding: 0 10px;
+  height: 34px;
+  font-size: 12px;
+  gap: 4px;
+}
+
+@media (min-width: 420px) {
+  .btn-primary.btn-add { padding: 0 14px; height: 38px; font-size: 13px; }
+}
+
+@media (min-width: 600px) {
+  .btn-primary.btn-add { padding: 0 18px; height: 42px; font-size: 14px; }
+}
+
+/* ─── BOUTON DÉCONNEXION ──────────────────────────────────── */
+.btn-ghost.btn-sm {
+  height: 28px;
+  padding: 0 8px;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+@media (min-width: 420px) {
+  .btn-ghost.btn-sm { height: 30px; padding: 0 10px; font-size: 12px; }
+}
 }
 
 /* ─── CONTENT ─────────────────────────────────────────────── */
