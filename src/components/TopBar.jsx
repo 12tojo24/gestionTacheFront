@@ -1,5 +1,4 @@
-// components/Topbar.jsx
-export default function Topbar({ onAdd }) {
+export default function TopBar({ onAdd }) {
   return (
     <div className="topbar">
       <span className="logo">

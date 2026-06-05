@@ -1,6 +1,6 @@
 // components/TaskManager.jsx
 import { useState, useEffect, useRef, useCallback } from "react";
-import TopBar from "./TopBar"
+import TopBar from "./TopBar";
 import StatsGrid     from "./StatsGrid";
 import Toolbar       from "./Toolbar";
 import TaskList      from "./TaskList";
@@ -138,7 +138,7 @@ export default function TaskManager() {
 
   return (
     <div className="layout">
-      <Topbar onAdd={() => setModal("new")} />
+      <TopBar onAdd={() => setModal("new")} />
 
       <div className="content">
         <StatsGrid stats={stats} loading={loading} />
